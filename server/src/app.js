@@ -1,22 +1,8 @@
 const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override');
+const request = require('request');
 const app = express();
-//cors
-const cors = require("cors");
-var corsOptions = {
-  origin: "*"
-};
-
-app.use(cors(corsOptions));
-let allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', "*");
-    res.header("Access-Control-Allow-Methods", "OPTIONS, POST, GET, PUT, DELETE");
-    res.header('Access-Control-Allow-Headers', "*");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
-    next();
-  }
-app.use(allowCrossDomain);
 
 
 //Ejecuto el llamado a mis rutas
@@ -37,6 +23,12 @@ app.set('views', path.resolve(__dirname, './views'));
 app.set('view engine', 'ejs');
 
 app.use(express.static(path.resolve(__dirname, '../public')));
+
+// Express cors proxy server solution
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    next();
+  });
 
 //URL encode  - Para que nos pueda llegar la información desde el formulario al req.body
 app.use(express.urlencoded({ extended: false }));
